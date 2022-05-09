@@ -1,0 +1,362 @@
+@model AnalizModel
+@{
+    ViewBag.Title = "Rapor";
+}
+
+<h1 style="text-align: center;"><b>Rapor Ekranı</b></h1>
+<br>
+<br>
+<style>
+    .accordion-header
+    {
+        background-color: #6c757d;
+        
+    }
+    .accordion-header button
+    {
+        color : white;
+    }
+</style>
+@section Css{
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+}
+
+@section Script{
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+ <script>
+    window.onload = function () {
+        var objVideoString = JSON.stringify(@Html.Raw(Model.VideoJson));
+        var objVideo = JSON.parse(objVideoString);
+
+        var objQuestionString = JSON.stringify(@Html.Raw(Model.QuestisonJson));
+        var objQuestion = JSON.parse(objQuestionString);
+       
+
+    
+        var dpsVideo = [];
+        for (var i = 0; i < objVideo.length; i++) {
+            dpsVideo.push(
+                { x: new Date(Date.parse(objVideo[i].WatchDate)), y: objVideo[i].WatchTimeS },
+            );
+        }
+
+        var dpsQuestion = [];
+        for (var i = 0; i < objQuestion.length; i++) {
+            dpsQuestion.push(
+                { x: new Date(Date.parse(objQuestion[i].Date)), y: (i*10) },
+            );
+        }
+        
+                
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title:{
+                text: "İnteraktif İçerik Etkileşimi"
+            },
+            axisX: {
+                title: "Tarih",
+                valueFormatString: "DD MMM,YY"
+            },
+            axisY: {
+                title: "Temperature (in °C)",
+                suffix: " °C"
+            },
+            legend:{
+                cursor: "pointer",
+                fontSize: 16,
+                itemclick: toggleDataSeries
+            },
+            toolTip:{
+                shared: true
+            },
+            data: [
+            {
+                name: " Beach",
+                type: "spline",
+                yValueFormatString: "#0.## °C",
+                showInLegend: true,
+                dataPoints: [
+                    { x: new Date(2017,6,24), y: 31 },
+                    { x: new Date(2017,6,25), y: 31 },
+                    { x: new Date(2017,6,26), y: 29 },
+                    { x: new Date(2017,6,27), y: 29 },
+                    { x: new Date(2017,6,28), y: 31 },
+                    { x: new Date(2017,6,29), y: 30 },
+                    { x: new Date(2017,6,30), y: 29 }
+                ]
+            },
+            {
+                name: "Martha Vineyard",
+                type: "spline",
+                yValueFormatString: "#0.## °C",
+                showInLegend: true,
+                dataPoints: [
+                    { x: new Date(2017,6,24), y: 20 },
+                    { x: new Date(2017,6,25), y: 20 },
+                    { x: new Date(2017,6,26), y: 25 },
+                    { x: new Date(2017,6,27), y: 25 },
+                    { x: new Date(2017,6,28), y: 25 },
+                    { x: new Date(2017,6,29), y: 25 },
+                    { x: new Date(2017,6,30), y: 25 }
+                ]
+            },
+            {
+                name: "Nantucket",
+                type: "spline",
+                yValueFormatString: "#0.## °C",
+                showInLegend: true,
+                dataPoints: [
+                    { x: new Date(2017,6,24), y: 22 },
+                    { x: new Date(2017,6,25), y: 19 },
+                    { x: new Date(2017,6,26), y: 23 },
+                    { x: new Date(2017,6,27), y: 24 },
+                    { x: new Date(2017,6,28), y: 24 },
+                    { x: new Date(2017,6,29), y: 23 },
+                    { x: new Date(2017,6,30), y: 23 }
+                ]
+            },
+            {
+                name: "Video",
+                type: "line",
+                yValueFormatString: "#0.## °C",
+                showInLegend: true,
+                dataPoints: dpsVideo
+            },
+            {
+                name: "Sorular",
+                type: "line",
+                yValueFormatString: "#0.## °C",
+                showInLegend: true,
+                dataPoints: dpsQuestion
+            }]
+        });
+        chart.render();
+
+        function toggleDataSeries(e){
+            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            }
+            else{
+                e.dataSeries.visible = true;
+            }
+            chart.render();
+        }
+
+    }
+</script>
+
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h2>Hasta Bilgileri</h2>
+            <hr/>
+            <form>
+                <div class="form group">
+                    <label class="control-label col-md-4">TC Numara :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.TCNumber</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">İsim :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Name</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">Soy İsim :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Surname</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">E-Posta :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Email</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">Telefon Numarası :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.PhoneNumber</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">Doğum Tarihi :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Birthday</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">Cinsiyet :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Gender</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">Başvuru Sahibi :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Applicant</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-4">Operasyon Adı :</label>
+                    <label class="control-label col-md-5">@Model.Hasta.Operation</label>
+                </div>
+                
+            </form>
+        </div>
+        <div class="col-sm">
+            <h2> Bilgi Düzeyi </h2>
+            <hr/>
+
+            @if(Model.Level <=33){
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 33%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                }
+                @if(33 < Model.Level && Model.Level<=66){
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 66%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                }
+                @if(66 < Model.Level && Model.Level<=100){
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            }
+
+            <h5> @Model.WarningMessage</h5>
+                
+            <h3>Genel Etkileşim</h3>
+            <hr/>
+            <form>
+                <div class="form group">
+                    <label class="control-label col-md-6">Cevaplanılan İçerik Sayısı :</label>
+                    <label class="control-label col-md-3">@Model.QuestionCount</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-6">Doğru Cevaplanılan İçerik Sayısı :</label>
+                    <label class="control-label col-md-3">@Model.SuccessAnswerCount</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-6">Yanlış Cevaplanılan İçerik Sayısı :</label>
+                    <label class="control-label col-md-3">@Model.WrongAnswerCount</label>
+                </div>
+                <div class="form group">
+                    <label class="control-label col-md-5">Doğru Cevap Oranı :</label>
+                    <label class="control-label col-md-4">@Model.SuccessAnswerCount / @Model.QuestionCount </label>
+                </div>
+            </form>
+        </div>
+    </div>
+    @* <div class="row" id="chartContainer" style="height: 370px; width: 100%;"></div> *@
+    <div class="row">
+        <div class="col-sm">
+            <h3>Video Etkileşimi</h3>
+            <hr/>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                @{
+                    int   count = 0;
+                }
+                @foreach (var item in Model.VideoAnalizs)
+                {
+                    <div class="accordion-item" >
+                        <h2 class="accordion-header" id="flush-heading-@count" >
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-@count" aria-expanded="false" aria-controls="flush-collapse-@count">
+                                İçerik İsmi : @item.ObjectName
+                            </button>
+                        </h2>
+                        <div id="flush-collapse-@count" class="accordion-collapse collapse" aria-labelledby="flush-heading-@count" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <form>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">İçerik :</label>
+                                        <label class="control-label col-md-5"><a href="@item.ObjectLink">Buraya Tıklayınız</a></label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">İçerik İsmi :</label>
+                                        <label class="control-label col-md-5">@item.ObjectName</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Video Süresi :</label>
+                                        <label class="control-label col-md-5">@item.VideoTimeM Dakika @item.VideoTimeS Saniye</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">İzleme Süresi :</label>
+                                        <label class="control-label col-md-5">@item.WatchTimeM Dakika @item.WatchTimeS Saniye</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">İzleme Oranı :</label>
+                                        <label class="control-label col-md-5">@item.WatchRatio.ToString("N0") <i class="fas fa-percent"></i></label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Tarih :</label>
+                                        <label class="control-label col-md-5">@item.WatchDate</label>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>   
+                    count++;
+                }
+            </div>
+        </div>
+        <div class="col-sm">
+            <h3>Soru Etkileşimi</h3>
+            <hr/>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                @{
+                    int   count2 = count+1;
+                }
+                @foreach (var item in Model.Questions)
+                {
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading-@count2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-@count2" aria-expanded="false" aria-controls="flush-collapse-@count2">
+                                İçerik İsmi : @item.QuestionName
+                            </button>
+                        </h2>
+                        <div id="flush-collapse-@count2" class="accordion-collapse collapse" aria-labelledby="flush-heading-@count2" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <form>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">İçerik :</label>
+                                        <label class="control-label col-md-5"><a href="@item.ObjectLink">Buraya Tıklayınız</a></label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">İçerik İsmi :</label>
+                                        <label class="control-label col-md-5">@item.QuestionName</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Soru :</label>
+                                        <label class="control-label col-md-4">@item.Question</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Şıklar :</label>
+                                        @foreach (var item2 in item.Choice)
+                                        {
+                                            <label class="control-label col-md-2">  @item2.Choice</label>
+                                        }
+                                        
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Doğru Cevap :</label>
+                                        <label class="control-label col-md-5">@item.SuccessChoise.Choice</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Kullanıcı Cevabı :</label>
+                                        <label class="control-label col-md-5">@item.AnswerChoice.Choice</label>
+                                    </div>
+                                    <div class="form group">
+                                        <label class="control-label col-md-4">Tarih :</label>
+                                        <label class="control-label col-md-5">@item.Date</label>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>   
+                    
+                    count2++;
+                    
+                    
+
+                }
+            </div>
+        </div>
+   
+    </div>
+</div>

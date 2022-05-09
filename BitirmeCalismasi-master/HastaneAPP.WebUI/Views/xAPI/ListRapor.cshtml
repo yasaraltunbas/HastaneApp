@@ -1,0 +1,155 @@
+@model IEnumerable<xAPIDetailModel> 
+@* IEnumerable<WpH5pxapikatchu> *@
+@{
+    Layout = "~/Views/Shared/_LayoutxAPI.cshtml";
+}
+
+@section Css{
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <style>
+        tr{
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table-bordered td{
+            vertical-align: middle;
+            align:middle;
+        }
+    </style>
+}
+
+@section Script{
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+ 
+}
+
+<h1>xAPI List</h1>
+<hr>
+
+
+
+<table id="userTable" class="table table-bordered" style="font-size : 13px; " >
+    <thead>
+        <tr>
+            <td></td>
+            <td>Mail</td>
+            <td>Kullanıcı İsmi</td>
+
+            <td>Eylem</td>
+
+            <td>Nesne İçerik İsmi</td>
+            <td>Soru</td>
+            <td>Şıklar</td>
+            <td>Doğru Cevaplar</td>
+
+            <td>Kullanıcı Cevabı</td>
+            <td>Doğru Cevap Sayısı</td>
+            <td>Kullanıcı Puanı</td>
+            <td>Sonuç Tamamlama</td>
+            <td>Sonuç Doğruluğu</td>
+            <td>Cevaplama Süresi</td>
+
+            <td>Tarih</td>
+            
+
+            
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        { 
+            @foreach (var tmp in Model)
+            {
+               
+                <tr>
+                    <td>
+                        @* <a href="/admin/user/@user.Id" class="btn btn-primary btn-sm mr-2">Edit</a> *@
+                        
+                        <form asp-controller="xAPI" asp-action="xAPIDelete" method="POST" style="display: inline;">
+                            <input type="hidden" name="Id" value="@tmp.xapi.Id">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form> 
+
+                    </td>
+                    <td>@tmp.xapiActor.ActorId</td>
+                    <td>@tmp.xapiActor.ActorName</td>
+                     @if(tmp.xapiVerb.VerbDisplay == "bitirdi")
+                    { 
+                     <td style="background-color:red;">@tmp.xapiVerb.VerbDisplay</td>
+                        
+                    }
+                    else if(tmp.xapiVerb.VerbDisplay == "cevapladı")
+                    { 
+                     <td style="background-color:green;">@tmp.xapiVerb.VerbDisplay</td>
+                        
+                    }
+                    else if(tmp.xapiVerb.VerbDisplay == "gördü")
+                    { 
+                     <td style="background-color:yellow;">@tmp.xapiVerb.VerbDisplay</td>
+                        
+                    }
+                    else if(tmp.xapiVerb.VerbDisplay == "denedi")
+                    { 
+                     <td style="background-color:purple;">@tmp.xapiVerb.VerbDisplay</td>
+                        
+                    }
+                    else if(tmp.xapiVerb.VerbDisplay == "ilerledi")
+                    { 
+                     <td style="background-color:blue;">@tmp.xapiVerb.VerbDisplay</td>
+                        
+                    }
+                    else if(tmp.xapiVerb.VerbDisplay == "accessed-embed")
+                    {
+                        <td style="background-color:pink;">@tmp.xapiVerb.VerbDisplay</td>
+                    }
+                    else
+                    {
+                        <td>@tmp.xapiVerb.VerbDisplay</td>
+                    }
+                    
+
+
+                    <td>@tmp.xapiObject.ObjectName</td>
+                    <td>@tmp.xapiObject.ObjectDescription</td>
+                    <td>@tmp.xapiObject.ObjectChoices</td>
+                    <td>@tmp.xapiObject.ObjectCorrectResponsesPattern</td>
+                   
+                        <td>@tmp.xapiResult.ResultResponse</td>
+
+                        <td>@tmp.xapiResult.ResultScoreRaw</td>
+                        <td>@tmp.xapiResult.ResultScoreScaled</td>
+                    @if(tmp.xapiVerb.VerbDisplay == "cevapladı" || tmp.xapiVerb.VerbDisplay == "bitirdi") 
+                    {
+                        @if(tmp.xapiResult.ResultCompletion == true )
+                        {
+                            <td>Evet</td>
+                        }
+                        else{
+                            <td>Hayır</td>
+                        } 
+                        @if(tmp.xapiResult.ResultSuccess == true )
+                        {
+                            <td>Doğru</td>
+                        }
+                        else{
+                            <td>Yanlış</td>
+                        }                            
+                    }
+                    else{
+                        <td><b>-</b></td>
+                        <td><b>-</b></td>
+                    }
+
+                        <td>@tmp.xapiResult.ResultDuration</td>
+
+                    <td>@tmp.xapi.Time</td>
+                  
+                    
+                </tr>
+            }
+        }
+        @* else
+            @await Html.PartialAsync("_noproduct")  *@
+        
+    </tbody>
+</table>

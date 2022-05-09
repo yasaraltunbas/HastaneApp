@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand" asp-controller="Hasta" asp-action="List">Hastane</a>
+            <ul class="navbar-nav mr-auto">
+                @if(@User.Identity.IsAuthenticated)
+                { 
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;">Hasta</a>
+                        <div class="dropdown-menu">
+                            <a asp-controller="Hasta" asp-action="Register" class="dropdown-item">Hasta Kayıt</a>
+                            <a asp-controller="Hasta" asp-action="List" class="dropdown-item">Hasta Listesi</a>
+                        <div class="dropdown-divider"></div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;">Operasyon</a>
+                        <div class="dropdown-menu">
+                            <a asp-controller="Admin" asp-action="CreateOperation" class="dropdown-item">Yeni Operasyon</a>
+                            <a asp-controller="Admin" asp-action="ListOperation" class="dropdown-item">Operasyon Listesi</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="xAPI" asp-action="ListRapor" class="nav-link active">Genel Hasta Verileri</a>
+                    </li>
+               
+                
+
+                }
+                
+                
+            </ul>
+            
+            <ul class="navbar-nav ml-auto">
+                @if(@User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Account" asp-action="Manager" class="nav-link active">
+                            Doktor @User.Identity.Name
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Account" asp-action="Logout" class="nav-link active">Logout</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Account" asp-action="Login" class="nav-link active">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Account" asp-action="Register" class="nav-link active">Register</a>
+                    </li>
+                }
+              
+                
+
+            </ul>
+    </div>
+</nav> 

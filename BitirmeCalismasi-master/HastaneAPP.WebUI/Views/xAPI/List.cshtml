@@ -1,0 +1,99 @@
+@model IEnumerable<xAPIDetailModel> 
+@* IEnumerable<WpH5pxapikatchu> *@
+@{
+    Layout = "~/Views/Shared/_LayoutxAPI.cshtml";
+}
+
+@section Css{
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+}
+
+@section Script{
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+ 
+}
+
+<h1>xAPI List</h1>
+<hr>
+
+<table id="userTable" class="table table-bordered">
+    <thead>
+        <tr>
+            
+            <td>Actor Id</td>
+            <td>Actor Name</td>
+            <td>Actor Group Members</td>
+
+            <td>Verb Id</td>
+            <td>Verb Display</td>
+
+            <td>Object Id</td>
+            <td>Object Def. Name</td>
+            <td>Object Def. Description</td>
+            <td>Object Def. Choices</td>
+            <td>Object Def. Correct Responses</td>
+
+            <td>Result Response</td>
+            <td>Result Score Raw</td>
+            <td>Result Score Scaled</td>
+            <td>Result Completiton</td>
+            <td>Result Success</td>
+            <td>Result Duration</td>
+
+            <td>Time</td>
+            <td>xAPI</td>
+            <td>WP User ID</td>
+            <td>H5P Content ID</td>
+            <td>H5P Subcontent ID</td>
+
+            
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        { 
+            @foreach (var tmp in Model)
+            {
+                <tr>
+                    <td>@tmp.xapiActor.ActorId</td>
+                    <td>@tmp.xapiActor.ActorName</td>
+                    <td>@tmp.xapiActor.ActorMembers</td>
+                    
+                    <td>@tmp.xapiVerb.VerbId</td>
+                    <td>@tmp.xapiVerb.VerbDisplay</td>
+
+                    <td>@tmp.xapiObject.XobjectId</td>
+                    <td>@tmp.xapiObject.ObjectName</td>
+                    <td>@tmp.xapiObject.ObjectDescription</td>
+                    <td>@tmp.xapiObject.ObjectChoices</td>
+                    <td>@tmp.xapiObject.ObjectCorrectResponsesPattern</td>
+                 
+
+                        <td>@tmp.xapiResult.ResultResponse</td>
+                        <td>@tmp.xapiResult.ResultScoreRaw</td>
+                        <td>@tmp.xapiResult.ResultScoreScaled</td>
+                        <td>@tmp.xapiResult.ResultCompletion</td>
+                        <td>@tmp.xapiResult.ResultSuccess</td>
+                        <td>@tmp.xapiResult.ResultDuration</td>
+
+                    <td>@tmp.xapi.Time</td>
+                    <td>@tmp.xapi.Xapi</td>
+                    <td>@tmp.xapiActor.WpUserId</td>
+                    <td>@tmp.xapiObject.H5pContentId</td>
+                    <td>@tmp.xapiObject.H5pSubcontentId</td>
+                    <td>
+                        @* <a href="/admin/user/@user.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
+                        
+                        <form asp-controller="admin" asp-action="UserDelete" method="POST" style="display: inline;">
+                            <input type="hidden" name="UserId" value="@user.Id">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form> *@
+
+                    </td>
+                </tr>
+            }
+        }
+   
+        
+    </tbody>
+</table>

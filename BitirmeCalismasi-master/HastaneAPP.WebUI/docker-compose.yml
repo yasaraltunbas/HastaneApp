@@ -1,0 +1,40 @@
+version: "3.9"
+    
+services:
+  db:
+    image: mysql:5.7.33
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../mysql/mysql:/var/lib/mysql
+    restart: always
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    volumes:
+      - ../wp/wordpress:/var/www/html
+    ports:
+      - "8000:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: remote
+      WORDPRESS_DB_PASSWORD: 160201070
+      WORDPRESS_DB_NAME: HastaneBilgi
+  netcore:
+    build: ../dotnet/project_publish/
+    ports: 
+     - "8002:80"
+    restart: always
+    depends_on:
+     - db
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8001:80
+    environment:
+      - PMA_ARBITRARY=1

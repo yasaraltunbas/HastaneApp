@@ -1,0 +1,188 @@
+@model EditHastaModel
+@{
+    ViewData["Title"] = "Hasta Kayıt";
+
+}
+
+@section Script
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('texteditor');
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+}
+@section Css{
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <style>
+        .td input
+        {
+            font-size: 10px;
+        }
+    </style>
+}
+
+
+
+<div class="container">
+    <div class="row">
+ 
+    <div class="col-md-5">
+        <form asp-controller="Hasta" asp-action="Edit" method="post">
+            @if( ViewBag.ErrorMesage != null)
+            {
+                <div class="text-danger">@ViewBag.ErrorMesage</div>
+            }
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">TC No</label>
+                <div class="col-md-10">
+                    <input asp-for="hastaModel.TCNumber" value="@Model.hastaModel.TCNumber" class="form-control" />
+                    <span asp-validation-for="hastaModel.TCNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">İsim</label>
+                <div class="col-md-10">
+                    <input asp-for="hastaModel.Name" value="@Model.hastaModel.Name" class="form-control" />
+                    <span asp-validation-for="hastaModel.Name" class="text-danger"></span>
+                </div>
+            </div>
+        
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Soyisim</label>
+                <div class="col-md-10">
+                    <input asp-for="hastaModel.Surname" value="@Model.hastaModel.Surname" class="form-control" />
+                    <span asp-validation-for="hastaModel.Surname" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Doğum Tarihi</label>
+                <div class="col-md-10">
+                    <input type="datetime" asp-for="hastaModel.Birthday" value="@Model.hastaModel.Birthday" class="form-control" />
+                    <span asp-validation-for="hastaModel.Birthday" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Cinsiyet</label>
+                <div class="col-md-10">
+                    @foreach (var gender in Model.hastaModel.Genders)
+                    {
+                        @Html.RadioButtonFor(model => model.hastaModel.Gender, gender) @gender<br />
+                        @* <input type="radio" asp-for="Gender" value="@gender" class="form-control" /> *@
+                    }
+                    <span asp-validation-for="hastaModel.Gender" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Telefon</label>
+                <div class="col-md-10">
+                    <input asp-for="hastaModel.PhoneNumber" value="@Model.hastaModel.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="hastaModel.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">E-Posta</label>
+                <div class="col-md-10">
+                    <input asp-for="hastaModel.Email" value="@Model.hastaModel.Email" class="form-control" />
+                    <span asp-validation-for="hastaModel.Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Başvuru Sahibi</label>
+                <div class="col-md-10">
+                    @foreach (var applicant in Model.hastaModel.Applicants)
+                    {
+                        @Html.RadioButtonFor(model => model.hastaModel.Applicant, applicant) @applicant<br />
+                        @* <input type="radio" asp-for="Applicant" value="@applicant" class="form-control"  />@applicant<br /> *@
+                    }
+                    <span asp-validation-for="hastaModel.Applicant" class="text-danger"></span>
+                </div>
+            </div>  
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Operasyon Adı</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.hastaModel.Operation, (SelectList)ViewBag.OperationList, "Lütfen Seçiniz", new { @class = "dropdown form-control" })
+
+                    <span asp-validation-for="hastaModel.Operation" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div  class="row">
+                    <div class="col-md-10 offset-md-2 text-right">
+                        <button type="submit" class="btn btn-primary">Güncelle</button>
+                    </div>
+                </div>
+            </div>
+           
+        </form>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+        <div class="accordion accordion-flush" id="accordionFlushExample"></div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-heading-Email">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-Email" aria-expanded="false" aria-controls="flush-collapse-Email">
+                    Email Gönder
+                    </button>
+                </h2>
+                <div id="flush-collapse-Email" class="accordion-collapse collapse" aria-labelledby="flush-heading-Email" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <form asp-controller="Hasta" asp-action="SendEmail" method="post">
+                          
+
+                            <div class="form-group row">
+                                <label>Başlık</label>
+                                <input asp-for="emailModel.Title" value="@Model.emailModel.Title" class="form-control" />
+                                <span asp-validation-for="emailModel.Title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <label>İçerik</label>
+                                <textarea id="texteditor" asp-for="emailModel.Text" class="form-control texteditor"></textarea>
+                                <span asp-validation-for="emailModel.Text"></span>
+                                <span class="text-danger"></span>
+                            </div>
+                            <input type="hidden" name="emailModel.Email" value="@Model.hastaModel.Email">
+                            <input type="hidden" name="HastaID" value="@Model.HastaID">
+
+                            <div class="form-group row">
+                                <div class="col-md-10 offset-md-2 text-right">
+                                    <button type="submit" class="btn btn-primary">Email Gönder</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>   
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-heading-SMS">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-SMS" aria-expanded="false" aria-controls="flush-collapse-SMS">
+                    SMS Gönder
+                    </button>
+                </h2>
+                <div id="flush-collapse-SMS" class="accordion-collapse collapse" aria-labelledby="flush-heading-SMS" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <div class="form-group row">
+                            <label>Mesaj</label>
+                            <textarea  asp-for="smsModel.Text" class="form-control texteditor" maxlength="140"></textarea>
+                            <span asp-validation-for="smsModel.Text"></span>
+                            <span class="text-danger"></span>
+                        </div>
+                        <input type="hidden" name="smsModel.Phone" value="@Model.hastaModel.PhoneNumber">
+                    </div>
+                </div>
+            </div>   
+        </div>   
+    </div>
+       
+    </div>
+     
+</div>
+

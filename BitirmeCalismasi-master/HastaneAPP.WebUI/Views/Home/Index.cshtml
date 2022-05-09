@@ -1,0 +1,275 @@
+@{
+    ViewData["Title"] = "Index";
+}
+<!doctype html>
+
+<head>
+<script type="text/javascript" src="/js/tincan.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<style>
+
+        table, th, td{ 
+            border: 1px solid black; 
+            border-collapse: collapse; 
+            text-align:center; 
+
+        } 
+        /* setting the text-align property to center*/ 
+        td { 
+            padding: 5px; 
+            text-align:center; 
+
+        } 
+        .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        } 
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }  
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+        .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+    </style>
+
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!------------------------------------->
+    <script>
+        // var tincan = new TinCan(
+        //     {
+        //         recordStores: [
+        //             {
+        //                 endpoint: "https://trial-lrs.yetanalytics.io/xapi",
+        //                 username: "8c427f5f852faf64c3a4f95997bb2d12",
+        //                 password: "a4ed95d4284a7c3171bc9002eb5ad935",
+        //                 allowFail: false
+        //             }
+        //         ]
+        //     }
+        // );
+        var tincan = new TinCan(
+            {
+                recordStores: [
+                    {
+                        endpoint: "http://20.71.61.215:8000/xAPI/",
+                        username: "LRS_Admin",
+                        password: "160201070",
+                        allowFail: false
+                    }
+                ]
+            }
+        );
+
+        function get_statements() {
+
+
+            tincan.getStatements(
+                {
+                    // 'params' is passed through to TinCan.LRS.queryStatements
+                    params: {
+                        since: "2013-10-24T18:34:43.244Z"
+                        },
+                        callback: function (err, result) {
+                        // 'err' will be null on success
+                        if (err !== null) {
+                            // handle error
+                            return;
+                        }
+                        // document.write(result.statements[0].length + "    ");
+                 
+                        
+                        var a = result.statements;
+
+                        for (var i = 0; i<a.length; i++) {
+                            showtable(a[i].id,a[i].actor,a[i].verb, a[i].target, a[i].timestamp)
+
+                        }
+                        // handle success, 'result' is a TinCan.StatementsResult object
+                        console.log(result);
+                        // return result.statements;
+                    }
+                }
+            );
+        }
+        function send_statement(nameone, displayname, objectname) {
+
+
+
+            tincan.sendStatement(
+                {
+                    actor: {
+                        mbox: "emre998@hotmail.com",
+                        name: nameone
+                    },
+                    verb: {
+                        id: "http://adlnet.gov/expapi/verbs/attempted",
+                                display: { "tr-TR": displayname }
+
+                    },
+                    target: {
+                        id: "https://experienceapi.com/activities/sending-my-first-statement",
+                        definition: {
+                            "name": { "tr-TR": objectname }
+                        }
+                    }
+                  
+                }
+                // },
+                // function (err, result) {
+                //     //Handle any errors here. This code just outputs the result to the page. 
+                //     document.write("<pre>");
+                //     document.write(JSON.stringify(aerr, null, 4));
+                //     document.write("</pre>");
+                //     document.write("<pre>");
+                //     document.write(JSON.stringify(result, null, 4));
+                //     document.write("</pre>");
+                // }
+            );
+        }
+        
+        $('tr').click(function() {
+            html = $(this).addClass("active-row");
+        });
+</script>
+   
+
+</head>
+
+<body>
+    <main class="my-3">
+        <div class="container">
+            <!-- <div class="row"> -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <!-- <input id="object1" type="text" name="object1">
+                        <button type="button" onclick="send_statement('emre','basladi',document.getElementById('object1').value)">Send Statements</button>
+                        <hr /> -->
+
+                        <form>
+                            <div class="form-group">
+                              <label>Actor</label>
+                              <input type="text" class="form-control"   placeholder="Enter Actor" name="actor" id="actor">
+                            </div>
+                            <div class="form-group">
+                                <label>Verb</label>
+                                <input type="text" class="form-control"   placeholder="Enter Verb" name="verb" id="verb">
+                            </div>
+                            <div class="form-group">
+                                <label>Object</label>
+                                <input type="text" class="form-control"   placeholder="Enter Object" name="target" id="target"> 
+                            </div> 
+                            
+                            <button type="submit" class="btn btn-primary" onclick="send_statement(document.getElementById('actor').value,document.getElementById('verb').value,document.getElementById('target').value)">Send Statements</button>
+                            
+                          </form>
+
+                          <hr>
+                          <button id="getobject" type="button" onclick="get_statements()" class="btn btn-primary">Get Statements</button>
+                    </div>
+                    <div class="col-md-9" >
+                        <table id="liste" class="styled-table" >
+                            <thead>
+                                <tr>   
+                                  <th colspan="1">ID</th>
+                                  <th colspan="2">Actor</th>
+                                  <th colspan="1">Verb</th>
+                                  <th colspan="2">Object</th>
+                                  <th colspan="1">Date</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Mail</th>
+                                    <th>Definition</th>
+                                    <th>Object</th>
+                                    <th>Object Type</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        
+                        </table>
+                   </div>
+                  
+            
+                <!-- </div> -->
+            </div>
+        </div>
+    </main>
+    
+   <script>
+    
+    const liste=document.querySelector("#liste");
+        
+
+    function showtable(id,actor,verb,target,date)
+    {
+        let tID=document.createElement("td");
+        let tActor_name=document.createElement("td");
+        let tActor_mail=document.createElement("td");
+        let tVerb=document.createElement("td");
+        let tTarget_definition=document.createElement("td");
+        let tTarget_type=document.createElement("td");
+        let tDate=document.createElement("td");
+
+        tID.textContent = id;
+        tActor_name.textContent = actor.name;
+        tActor_mail.textContent = actor.mbox;
+        tVerb.textContent = verb;
+        tTarget_definition.textContent = target;
+        tTarget_type.textContent = target.objectType;
+        tDate.textContent = date;
+
+        //tr elementi oluşturuyoruz
+        let tr=document.createElement("tr");
+        
+        //tdleri tr içine ekliyoruz
+        tr.appendChild(tID);
+        tr.appendChild(tActor_name);
+        tr.appendChild(tActor_mail);
+        tr.appendChild(tVerb);
+        tr.appendChild(tTarget_definition);
+        tr.appendChild(tTarget_type);
+        tr.appendChild(tDate);
+
+        //tr elementini liste (tablo) içine ekliyoruz
+        liste.appendChild(tr);
+        
+    }
+     
+
+    </script>
+</body>
+</html>

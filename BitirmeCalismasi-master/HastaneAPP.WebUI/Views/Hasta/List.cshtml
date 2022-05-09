@@ -1,0 +1,78 @@
+@model IEnumerable<Hastalar> 
+@{
+    Layout = "~/Views/Shared/_LayoutxAPI.cshtml";
+}
+
+@section Css{
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+}
+
+@section Script{
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    @* <script>
+        $(document).ready( function () {
+            $('#userTable').DataTable();
+        } );
+    </script> *@
+}
+
+<h1>Hasta Listesi</h1>
+<hr>
+<a asp-controller="Hasta" asp-action="Register" class="badge badge-primary mb-3">Yeni Hasta</a>
+
+<table id="userTable" class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Düzenle</td>
+            <td>TC No</td>
+            <td>İsim</td>
+            <td>Soyisim</td>
+            <td>Doğum Tarihi</td>
+            <td>Cinsiyet</td>
+            <td>Telefon</td>
+            <td>E-posta</td>
+            <td>Başvuru Sahibi</td>
+            <td>Operasyon Adı</td>
+            <td style="width: 150px;">Etkileşim</td>
+            <td style="width: 150px;">Rapor</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        { 
+            @foreach (var tmp in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@tmp.Id" class="btn text-primary"><i class="fas fa-user-edit"></i></a>
+                    </td>
+                    <td>@tmp.TCNumber</td>
+                    <td>@tmp.Name</td>
+                    <td>@tmp.Surname</td>
+                    <td>@tmp.Birthday</td>
+                    <td>@tmp.Gender</td>
+                    <td>@tmp.PhoneNumber</td>
+                    <td>@tmp.Email</td>
+                    <td>@tmp.Applicant</td>
+                    <td>@tmp.Operation</td>
+                    <td>
+                        <form action="/xAPI/ListRapor" method="POST" style="display: inline;">
+                            <input type="hidden" name="email" value="@tmp.Email">
+                                <button type="submit" class="btn btn-danger btn-sm">Kullanıcı Etkileşimleri</button>
+                        </form>
+                    </td>
+                     <td>
+                        <form action="/xAPI/RaporAnaliz" method="POST" style="display: inline;">
+                            <input type="hidden" name="email" value="@tmp.Email">
+                            <input type="hidden" name="id" value="@tmp.Id">
+                                <button type="submit" class="btn btn-primary btn-sm">Rapor Ekranı</button>
+                        </form>
+                    </td>
+                   
+                </tr>
+            }
+        }
+         
+        
+    </tbody>
+</table>

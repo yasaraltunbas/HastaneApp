@@ -1,0 +1,120 @@
+@model RegisterHastaModel
+@{
+    ViewData["Title"] = "Hasta Kayıt";
+}
+
+@section Script
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('texteditor');
+    </script>
+}
+@section Css{
+}
+
+<div class="row">
+    <div class="col-md-8">
+        @if( ViewBag.ErrorMesage != null)
+        {
+            <div class="text-danger">@ViewBag.ErrorMesage</div>
+        }
+
+        <form asp-controller="Hasta" asp-action="Register" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">TC No</label>
+                <div class="col-md-10">
+                    <input asp-for="TCNumber" value="@Model.TCNumber" class="form-control" />
+                    <span asp-validation-for="TCNumber" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">İsim</label>
+                <div class="col-md-10">
+                    <input asp-for="Name" value="@Model.Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div> 
+           
+             <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Soyisim</label>
+                <div class="col-md-10">
+                    <input asp-for="Surname" value="@Model.Surname" class="form-control" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Doğum Tarihi</label>
+                <div class="col-md-10">
+                    <input asp-for="Birthday" value="@Model.Birthday" class="form-control" />
+                    <span asp-validation-for="Birthday" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Cinsiyet</label>
+                <div class="col-md-10">
+                    @foreach (var gender in Model.Genders)
+                    {
+                           @Html.RadioButtonFor(model => model.Gender, gender) @gender<br />
+                        @* <input type="radio" asp-for="Gender" value="@gender" class="form-control" /> *@
+                    }
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+
+             <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Telefon</label>
+                <div class="col-md-10">
+                    <input asp-for="PhoneNumber" value="@Model.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">E-Posta</label>
+                <div class="col-md-10">
+                    <input asp-for="Email" value="@Model.Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Başvuru Sahibi</label>
+                <div class="col-md-10">
+                     @foreach (var applicant in Model.Applicants)
+                    {
+                        @Html.RadioButtonFor(model => model.Applicant, applicant) @applicant<br />
+                        @* <input type="radio" asp-for="Applicant" value="@applicant" class="form-control"  />@applicant<br /> *@
+                    }
+                    <span asp-validation-for="Applicant" class="text-danger"></span>
+                </div>
+            </div>  
+            <div class="form-group row">
+                <label for="" class="col-md-2 col-form-label">Operasyon Adı</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.Operation, (SelectList)ViewBag.OperationList, "Lütfen Seçiniz", new { @class = "dropdown form-control" })
+
+                    <span asp-validation-for="Operation" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="isSendEmail" id="isSendEmail" value="1">
+                <label class="custom-control-label" for="isSendEmail"> Email Gönder</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" type="checkbox" name="isSendSMS" id="isSendSMS" value="1">
+                <label class="custom-control-label" for="isSendSMS">SMS Gönder</label>
+            </div>
+             <div class="form-group row">
+                <div class="col-md-10 offset-md-2">
+                    <button type="submit" class="btn btn-primary">Hasta Ekle</button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
